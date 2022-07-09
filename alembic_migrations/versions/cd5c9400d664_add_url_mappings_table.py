@@ -21,7 +21,7 @@ TABLE = 'url_mappings'
 def upgrade():
     op.create_table(
         TABLE,
-        sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column('id', sa.INTEGER, primary_key=True, nullable=False, autoincrement=True),
         sa.Column('original_url', sa.String(), nullable=False, unique=True),
         sa.Column('short_url', sa.String(), nullable=False, unique=True),
     )

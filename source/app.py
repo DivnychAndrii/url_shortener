@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
+
 from source.settings import settings
+from source.routers import include_routers
 
 if TYPE_CHECKING:
     from source.settings import Settings
@@ -15,5 +17,6 @@ def create_app(config: 'Settings' = settings) -> FastAPI:
         debug=config.DEBUG,
         docs_url='/docs'
     )
+    include_routers(app)
 
     return app

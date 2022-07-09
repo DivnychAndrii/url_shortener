@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from source.settings import settings
 
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URI)
-SessionLocal = sessionmaker(engine, autocommit=False, autoflush=False)
+SessionLocal = sessionmaker(engine, autocommit=False)
 
 
 def get_db() -> Generator:
