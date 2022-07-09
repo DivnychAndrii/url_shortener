@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = {index = "pypi", version = "==0.78.0"}
+uvicorn = {extras = ["standard"], version = "*"}
+pydantic = {index = "pypi", version = "==1.9.1"}
+psycopg2 = {index = "pypi", version = "==2.9.3"}
+sqlalchemy = {index = "pypi", version = "==1.4.39"}
+alembic = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

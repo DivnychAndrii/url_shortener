@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: compose/db/Dockerfile
+    ports:
+      - "5040:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: url_shortener_db
+    networks:
+      server-backend:
+        aliases:
+          - url_shortener_db
+  server:
+    container_name: url_shortener_server
+    depends_on:
+      - postgres
+    build:
+      context: .
+      dockerfile: compose/url_shortener/Dockerfile
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://admin:admin@url_shortener_db/url_shortener_db?sslmode=disable
+    ports:
+      - "5036:5036"
+    volumes:
+      - ./:/app
+    networks:
+      server-backend:
+        aliases:
+          - url_shortener_server
+networks:
+  server-backend:
