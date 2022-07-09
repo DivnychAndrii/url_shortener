@@ -23,7 +23,7 @@ def upgrade():
         TABLE,
         sa.Column('id', sa.INTEGER, primary_key=True, nullable=False, autoincrement=True),
         sa.Column('original_url', sa.String(), nullable=False, unique=True),
-        sa.Column('short_url', sa.String(), nullable=False, unique=True),
+        sa.Column('hash_key', sa.String(), nullable=False, unique=True),
     )
 
 

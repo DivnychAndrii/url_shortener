@@ -9,6 +9,18 @@ class Error(BaseModel):
     type: str
 
 
+class NotFound(Error):
+    class Config:
+        schema_extra = {
+            "example": {
+                "detail": "{Description error}",
+                "status": status.HTTP_404_NOT_FOUND,
+                "title": "Not Found",
+                "type": "about:blank",
+            }
+        }
+
+
 class UnprocessableEntity(Error):
     class Config:
         schema_extra = {

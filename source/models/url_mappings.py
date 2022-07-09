@@ -8,5 +8,5 @@ class UrlMappingsModel(Base):
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     original_url = Column(String, nullable=False, unique=True)
-    short_url = Column(String, nullable=False, unique=True)
+    hash_key = Column(String, nullable=False, unique=True)
 

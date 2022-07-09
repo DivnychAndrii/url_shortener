@@ -15,6 +15,20 @@ services:
       server-backend:
         aliases:
           - url_shortener_db
+  postgres-test-db:
+    build:
+      context: .
+      dockerfile: compose/db/Dockerfile
+    ports:
+      - "5042:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: url_shortener_test_db
+    networks:
+      server-backend:
+        aliases:
+          - url_shortener_test_db
   server:
     container_name: url_shortener_server
     depends_on:
@@ -24,6 +38,7 @@ services:
       dockerfile: compose/url_shortener/Dockerfile
     environment:
       - SQLALCHEMY_DATABASE_URI=postgresql://admin:admin@url_shortener_db/url_shortener_db?sslmode=disable
+      - SQLALCHEMY_TEST_DATABASE_URI=postgresql://admin:admin@url_shortener_test_db/url_shortener_test_db?sslmode=disable
     ports:
       - "5036:5036"
     volumes:

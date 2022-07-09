@@ -14,6 +14,7 @@ RUN pip install --upgrade pip \
 COPY source ./source
 COPY ./compose/url_shortener/entrypoint.sh /entrypoint.sh
 COPY alembic_migrations ./alembic_migrations
+COPY tests ./tests
 COPY main.py ./main.py
 
 RUN chmod +x /entrypoint.sh

@@ -7,6 +7,7 @@ from pydantic import AnyUrl
 
 from source.models import UrlMappingsModel
 from source.utils import generate_random_hash
+from source.settings import settings
 from .base_manager import BaseManager
 
 
@@ -20,11 +21,11 @@ class URLManager(BaseManager):
     ) -> Union[List[Optional[UrlMappingsModel]], Optional[UrlMappingsModel]]:
         return getattr(self.session.query(UrlMappingsModel).filter_by(**filters), method)()
 
-    def generate_short_url(self, url: AnyUrl) -> UrlMappingsModel:
+    def create_short_url_hash(self, url: AnyUrl) -> UrlMappingsModel:
         random_hash = generate_random_hash(target_str=url)
         new_mapping_object = self.model(
             original_url=url,
-            short_url=random_hash
+            hash_key=random_hash
         )
         self.session.add(new_mapping_object)
         self.session.commit()

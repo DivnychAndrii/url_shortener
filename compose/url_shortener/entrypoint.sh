@@ -23,5 +23,3 @@ done
 
 alembic upgrade head && python3 main.py
 
->&2 echo "Starting services"
-
