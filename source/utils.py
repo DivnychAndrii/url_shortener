@@ -11,4 +11,4 @@ def generate_random_hash(target_str: str) -> str:
 
 
 def generate_short_url_based_on_hash(given_hash: str) -> str:
-    return f'{settings.HOST}{given_hash}'
+    return f'{settings.HOST}api/{given_hash}'

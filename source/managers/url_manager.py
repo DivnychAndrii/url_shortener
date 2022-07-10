@@ -1,6 +1,3 @@
-"""
-Managers module is intended to work with DB entities and realize the business logic
-"""
 from typing import Optional, Dict, Any, Union
 
 from pydantic import AnyUrl

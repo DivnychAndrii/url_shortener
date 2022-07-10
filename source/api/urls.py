@@ -1,6 +1,8 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Request
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
 from source.database import get_db
 from source.exceptions import NotFoundHTTPException
@@ -13,11 +15,11 @@ from source.schemas import (
 from source.managers import URLManager
 from source.utils import generate_short_url_based_on_hash
 
-router = APIRouter(prefix="", tags=["URLs"])
+router = APIRouter(tags=["URLs"])
 
 
 @router.post(
-    "/urls",
+    "/api/urls",
     summary="Generate short url endpoint",
     status_code=status.HTTP_200_OK,
     responses={status.HTTP_422_UNPROCESSABLE_ENTITY: {"model": UnprocessableEntity}},
@@ -37,7 +39,7 @@ def generate(body: GenerateShortUrlRequestModel, db: Session = Depends(get_db)):
 
 
 @router.get(
-    "/{url_key}",
+    "/api/{url_key}",
     summary="Redirect to the target endpoint by short key",
     status_code=status.HTTP_307_TEMPORARY_REDIRECT,
     responses={status.HTTP_404_NOT_FOUND: {"model": NotFound}},
@@ -51,3 +53,14 @@ def redirect(url_key: str, db: Session = Depends(get_db)) -> RedirectResponse:
         raise NotFoundHTTPException()
 
     return RedirectResponse(url_mapping_obj.original_url)
+
+
+@router.get(
+    "/home",
+    summary="Render UI home page",
+    status_code=status.HTTP_200_OK,
+    response_class=HTMLResponse,
+)
+def render_view(request: Request):
+    templates = Jinja2Templates(directory="source/static")
+    return templates.TemplateResponse("main.html", {"request": request})

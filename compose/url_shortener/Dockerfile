@@ -12,13 +12,10 @@ RUN pip install --upgrade pip \
     && pipenv install --deploy --system
 
 COPY source ./source
-COPY ./compose/url_shortener/entrypoint.sh /entrypoint.sh
 COPY alembic_migrations ./alembic_migrations
 COPY tests ./tests
 COPY main.py ./main.py
 
-RUN chmod +x /entrypoint.sh
-
 ENV PYTHONUNBUFFERED=1
 
-ENTRYPOINT ["bash", "/entrypoint.sh"]
+CMD ["python3", "main.py"]
