@@ -1,13 +1,12 @@
 """
 Managers module is intended to work with DB entities and realize the business logic
 """
-from typing import List, Optional, Dict, Any, Union
+from typing import Optional, Dict, Any, Union
 
 from pydantic import AnyUrl
 
 from source.models import UrlMappingsModel
 from source.utils import generate_random_hash
-from source.settings import settings
 from .base_manager import BaseManager
 
 
@@ -16,12 +15,11 @@ class URLManager(BaseManager):
 
     def get_url_object_by_filters(
             self,
-            filters: Dict[str, Any],
-            method: str = 'first'
-    ) -> Union[List[Optional[UrlMappingsModel]], Optional[UrlMappingsModel]]:
-        return getattr(self.session.query(UrlMappingsModel).filter_by(**filters), method)()
+            filters: Dict[str, Any]
+    ) -> Optional[UrlMappingsModel]:
+        return self.session.query(UrlMappingsModel).filter_by(**filters).first()
 
-    def create_short_url_hash(self, url: AnyUrl) -> UrlMappingsModel:
+    def create_short_url_hash(self, url: Union[AnyUrl, str]) -> UrlMappingsModel:
         random_hash = generate_random_hash(target_str=url)
         new_mapping_object = self.model(
             original_url=url,

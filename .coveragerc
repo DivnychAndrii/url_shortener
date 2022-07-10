@@ -1,0 +1,18 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+omit =
+        */package/__init__.py
+        source/app.py
+        compose/*
+        tests/*
+        */__init__.py
+
+
+[report]
+omit =
+        */package/__init__.py
+        source/app.py
+        compose/*
+        tests/*
+        */__init__.py

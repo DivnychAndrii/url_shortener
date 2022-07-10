@@ -21,5 +21,8 @@ done
 >&2 echo "PostgreSQL is up - continuing"
 >&2 echo "Running migration"
 
-alembic upgrade head && python3 main.py
+alembic upgrade head &&
+
+exec "$@"
+
 
