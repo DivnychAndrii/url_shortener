@@ -13,39 +13,41 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="main.js"></script>
 </head>
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">Andrii Divnych</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand" href="/docs">Swagger docs</a>
     </nav>
 </header>
-<main role="main">
-    <section class="jumbotron text-center">
-        <div class="container">
-            <h1 class="jumbotron-heading">In order to shorten the URL, enter it here:</h1>
-            <br>
-            <div class="mb-3">
-                <input type="text" class="form-control" id="urlInput" placeholder="www.google.com">
-            </div>
-            <button type="submit" class="btn btn-dark" id="but">Submit</button>
-            <br>
-            <br>
-            <h2 class="jumbotron-heading">Your short url:</h2>
-            <a id='short_link' target="_blank" rel="noopener noreferrer"></a>
+<body>
+<div class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">In order to shorten the URL, enter it here:</h1>
+        <br>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="urlInput" placeholder="https://www.google.com">
         </div>
-    </section>
-</main>
+        <button type="submit" class="btn btn-dark" id="but">Submit</button>
+        <br>
+        <br>
+        <h2 class="jumbotron-heading">Your short url:</h2>
+        <a id='short_link' target="_blank" rel="noopener noreferrer"></a>
+        <br>
+        <br>
+        <br>
+        <h3 class="jumbotron-heading">Your clicks count on that URL:</h3>
+        <h3 class="jumbotron-heading" id="clicks_count"></h3>
+    </div>
+</div>
+</body>
 </html>
 
 <script>
     const http_headers = {
         'Content-type': 'application/json',
     }
-    const getShortUrl = () => {
+    const getAPIdata = () => {
         fetch('http://0.0.0.0:5036/api/urls', {
             method: 'POST',
             headers: http_headers,
@@ -55,17 +57,18 @@
         })
             .then(response => response.json())
             .then(response => {
-                const {short_url} = response;
+                const {short_url, clicks_count} = response;
                 const elem = document.getElementById('short_link')
                 $('#short_link').text(short_url)
+                $('#clicks_count').text(clicks_count || "No data related to that user")
                 elem.setAttribute('href', short_url)
             })
-            .catch(error => console.log(error));
+            .catch(error => console.log(error.response.data));
     };
 
     $(document).ready(function () {
         $("#but").click(function () {
-            getShortUrl();
+            getAPIdata();
         });
     });
 </script>
