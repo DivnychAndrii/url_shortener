@@ -8,11 +8,21 @@
 
 ### Run
 
-    $ make run.local
+    $ make run
+
+#### Command will start the API server alongside the route with the UI page. In order to open it, navigate to:
+
+    /home
 
 _Note_ This will create and run containers for the server, database, and 
 separate test database. It will also create a network which
 all containers, which wish to speak to the server container should use.
+
+### Run tests
+
+    $ make tests
+
+_None_ It will create a test database instance in a container and run tests using it. Coverage will be shown after
 
 
 ## Without Docker
@@ -22,7 +32,7 @@ postgres installed, you might need to install first.
 
 ### Install dependencies
 
-    $ pipenv sync -d
+    $ pipenv sync
 
 _Note_ On some machines you will be needed to install to ensure that psycopg2 module works correctly.
 If you get any troubles installing psycopg2 library from dependencies, run next command:
