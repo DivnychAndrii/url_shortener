@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, Union
+from typing import Union, Type
 
 from pydantic import AnyUrl
 
@@ -8,16 +8,13 @@ from .base_manager import BaseManager
 
 
 class URLManager(BaseManager):
-    model = UrlMappingsModel
 
-    def get_url_object_by_filters(
-            self,
-            filters: Dict[str, Any]
-    ) -> Optional[UrlMappingsModel]:
-        return self.session.query(self.model).filter_by(**filters).first()
+    @property
+    def model(self) -> Type[UrlMappingsModel]:
+        return UrlMappingsModel
 
     def get_or_create_short_url_hash(self, url: Union[AnyUrl, str]) -> UrlMappingsModel:
-        db_object = self.get_url_object_by_filters({'original_url': url})
+        db_object = self.get_model_object({'original_url': url})
 
         if not db_object:
             random_hash = generate_random_hash(target_str=url)

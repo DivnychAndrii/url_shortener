@@ -17,6 +17,7 @@ from source.utils import generate_short_url_based_on_hash
 
 router = APIRouter(tags=["URLs"])
 
+
 @router.post(
     "/api/urls",
     summary="Generate short url endpoint",
@@ -57,7 +58,7 @@ def redirect(url_key: str,
     user_manager = UserManager(db)
     short_link_clicks_manager = ShortLinkClickManager(db)
 
-    url_mapping_obj = url_manager.get_url_object_by_filters(filters={'hash_key': url_key})
+    url_mapping_obj = url_manager.get_model_object(filters={'hash_key': url_key})
     if (user_identification := request.client.host) is not None:
         user_obj = user_manager.get_or_create_user(user_identification)
         short_link_clicks_manager.update_clicks_count(user_obj.id, url_mapping_obj.id)
