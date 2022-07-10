@@ -18,11 +18,13 @@ def create_app(config: 'Settings' = settings) -> FastAPI:
         title='Url shortener',
         description='Url shortener',
         debug=config.DEBUG,
+        proxy_headers=True,
+        forwarded_allow_ips='*',
         docs_url='/docs'
     )
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.ALLOWED_HOSTS,
+        allow_origins=config.ALLOWED_HOSTS,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

@@ -12,11 +12,10 @@ from source.schemas import (
     UnprocessableEntity,
     NotFound
 )
-from source.managers import URLManager
+from source.managers import URLManager, ShortLinkClickManager, UserManager
 from source.utils import generate_short_url_based_on_hash
 
 router = APIRouter(tags=["URLs"])
-
 
 @router.post(
     "/api/urls",
@@ -26,16 +25,22 @@ router = APIRouter(tags=["URLs"])
     response_model=ShortUrlResponseModel,
     description="The endpoint is intended to be used in order to generate short url out of a given one",
 )
-def generate(body: GenerateShortUrlRequestModel, db: Session = Depends(get_db)):
+def generate(body: GenerateShortUrlRequestModel,
+             request: Request,
+             db: Session = Depends(get_db)) -> ShortUrlResponseModel:
     url_manager = URLManager(db)
+    user_manager = UserManager(db)
+    short_link_clicks_manager = ShortLinkClickManager(db)
+    clicks_count = None
 
-    url_mapping_obj = url_manager.get_url_object_by_filters(filters={'original_url': body.target_url})
-    if not url_mapping_obj:
-        url_mapping_obj = url_manager.create_short_url_hash(body.target_url)
+    url_mapping_obj = url_manager.get_or_create_short_url_hash(body.target_url)
+    if (user_identification := request.client.host) is not None:
+        user_obj = user_manager.get_or_create_user(user_identification)
+        clicks_count = short_link_clicks_manager.handle_clicks_count_object(user_obj.id, url_mapping_obj.id).count
 
     short_url = generate_short_url_based_on_hash(url_mapping_obj.hash_key)
 
-    return ShortUrlResponseModel(short_url=short_url)
+    return ShortUrlResponseModel(short_url=short_url, clicks_count=clicks_count)
 
 
 @router.get(
@@ -45,10 +50,18 @@ def generate(body: GenerateShortUrlRequestModel, db: Session = Depends(get_db)):
     responses={status.HTTP_404_NOT_FOUND: {"model": NotFound}},
     description="The endpoint is intended to redirect user to the target URL",
 )
-def redirect(url_key: str, db: Session = Depends(get_db)) -> RedirectResponse:
+def redirect(url_key: str,
+             request: Request,
+             db: Session = Depends(get_db)) -> RedirectResponse:
     url_manager = URLManager(db)
+    user_manager = UserManager(db)
+    short_link_clicks_manager = ShortLinkClickManager(db)
 
     url_mapping_obj = url_manager.get_url_object_by_filters(filters={'hash_key': url_key})
+    if (user_identification := request.client.host) is not None:
+        user_obj = user_manager.get_or_create_user(user_identification)
+        short_link_clicks_manager.update_clicks_count(user_obj.id, url_mapping_obj.id)
+
     if not url_mapping_obj:
         raise NotFoundHTTPException()
 
