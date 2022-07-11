@@ -83,7 +83,7 @@ def redirect(url_key: str,
 
 
 @router.get(
-    "/home",
+    "/",
     summary="Render UI home page",
     status_code=status.HTTP_200_OK,
     response_class=HTMLResponse,

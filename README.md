@@ -14,7 +14,7 @@
     $ docker-compose build && docker-compose up -d postgres && sleep 2 && docker-compose run server alembic -c alembic.ini upgrade heads && docker-compose up
 #### Command will start the API server alongside the route with the UI page. In order to open it, navigate to:
 
-    /home
+    /
 
 _Note_ This will create and run containers for the server, database, and 
 separate test database. It will also create a network which

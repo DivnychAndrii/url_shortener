@@ -123,7 +123,7 @@ class TestRedirectUrl:
 
 
 class TestRenderView:
-    endpoint = '/home'
+    endpoint = '/'
 
     def test_render_view_success(self, client: 'TestClient'):
         response = client.get(self.endpoint)
