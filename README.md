@@ -9,7 +9,9 @@
 ### Run
 
     $ make run
-
+    
+    docker alternative:
+    $ docker-compose build && docker-compose up -d postgres && sleep 2 && docker-compose run server alembic -c alembic.ini upgrade heads && docker-compose up
 #### Command will start the API server alongside the route with the UI page. In order to open it, navigate to:
 
     /home
@@ -22,6 +24,8 @@ all containers, which wish to speak to the server container should use.
 
     $ make tests
 
+    docker alternative:
+    $ docker-compose build && docker-compose up -d postgres-test-db && docker-compose run server python -m pytest --cov-config=.coveragerc --cov=source -v
 _None_ It will create a test database instance in a container and run tests using it. Coverage will be shown after
 
 
