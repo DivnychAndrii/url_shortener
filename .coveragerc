@@ -4,6 +4,7 @@ branch = True
 omit =
         */package/__init__.py
         source/app.py
+        source/database*
         compose/*
         tests/*
         */__init__.py
@@ -13,6 +14,7 @@ omit =
 omit =
         */package/__init__.py
         source/app.py
+        source/database*
         compose/*
         tests/*
         */__init__.py

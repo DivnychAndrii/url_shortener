@@ -1,3 +1,5 @@
+import os
+
 from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
@@ -30,6 +32,8 @@ def create_app(config: 'Settings' = settings) -> FastAPI:
         allow_headers=["*"],
     )
     include_routers(app)
-    app.mount("/static", StaticFiles(directory="source/static"), name="static")
+
+    project_dir = os.path.dirname(__file__)
+    app.mount("/static", StaticFiles(directory=os.path.join(project_dir, "static/")), name="static")
 
     return app

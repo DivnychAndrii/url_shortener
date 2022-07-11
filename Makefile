@@ -15,5 +15,5 @@ run: build run-migrations
 run-test-db: build
 	docker-compose up -d postgres-test-db
 
-tests: build run-test-db
+tests: run-test-db
 	docker-compose run server python -m pytest --cov-config=.coveragerc --cov=source -v

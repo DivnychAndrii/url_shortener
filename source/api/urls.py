@@ -59,12 +59,12 @@ def redirect(url_key: str,
     short_link_clicks_manager = ShortLinkClickManager(db)
 
     url_mapping_obj = url_manager.get_model_object(filters={'hash_key': url_key})
+    if not url_mapping_obj:
+        raise NotFoundHTTPException()
+
     if (user_identification := request.client.host) is not None:
         user_obj = user_manager.get_or_create_user(user_identification)
         short_link_clicks_manager.update_clicks_count(user_obj.id, url_mapping_obj.id)
-
-    if not url_mapping_obj:
-        raise NotFoundHTTPException()
 
     return RedirectResponse(url_mapping_obj.original_url)
 

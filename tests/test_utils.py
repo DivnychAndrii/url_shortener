@@ -15,7 +15,7 @@ def test_generate_random_hash(target_str: str):
 
 @pytest.mark.parametrize('given_hash', ['abc1', '==tuk'])
 def test_generate_short_url_based_on_hash(given_hash: str):
-    expected_result = f'{settings.HOST}{given_hash}'
+    expected_result = f'{settings.HOST}api/{given_hash}'
     actual_result = generate_short_url_based_on_hash(given_hash=given_hash)
 
     assert expected_result == actual_result
