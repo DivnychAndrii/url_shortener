@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, status, Depends, Request
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
@@ -76,5 +78,7 @@ def redirect(url_key: str,
     response_class=HTMLResponse,
 )
 def render_view(request: Request):
-    templates = Jinja2Templates(directory="source/static")
+    project_dir = os.path.dirname(__file__)
+    templates = Jinja2Templates(directory=os.path.join(project_dir, "../static/"))
+
     return templates.TemplateResponse("main.html", {"request": request})
