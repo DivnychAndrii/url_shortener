@@ -24,9 +24,12 @@ router = APIRouter(tags=["URLs"])
     "/api/urls",
     summary="Generate short url endpoint",
     status_code=status.HTTP_200_OK,
-    responses={status.HTTP_422_UNPROCESSABLE_ENTITY: {"model": UnprocessableEntity}},
+    responses={
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {"model": UnprocessableEntity}
+    },
     response_model=ShortUrlResponseModel,
-    description="The endpoint is intended to be used in order to generate short url out of a given one",
+    description=("The endpoint is intended to be used in order "
+                 "to generate short url out of a given one"),
 )
 def generate(body: GenerateShortUrlRequestModel,
              request: Request,
@@ -39,11 +42,15 @@ def generate(body: GenerateShortUrlRequestModel,
     url_mapping_obj = url_manager.get_or_create_short_url_hash(body.target_url)
     if (user_identification := request.client.host) is not None:
         user_obj = user_manager.get_or_create_user(user_identification)
-        clicks_count = short_link_clicks_manager.handle_clicks_count_object(user_obj.id, url_mapping_obj.id).count
+        clicks_count = short_link_clicks_manager.handle_clicks_count_object(
+            user_obj.id, url_mapping_obj.id
+        ).count
 
     short_url = generate_short_url_based_on_hash(url_mapping_obj.hash_key)
 
-    return ShortUrlResponseModel(short_url=short_url, clicks_count=clicks_count)
+    return ShortUrlResponseModel(
+        short_url=short_url, clicks_count=clicks_count
+    )
 
 
 @router.get(
@@ -60,13 +67,17 @@ def redirect(url_key: str,
     user_manager = UserManager(db)
     short_link_clicks_manager = ShortLinkClickManager(db)
 
-    url_mapping_obj = url_manager.get_model_object(filters={'hash_key': url_key})
+    url_mapping_obj = url_manager.get_model_object(
+        filters={'hash_key': url_key}
+    )
     if not url_mapping_obj:
         raise NotFoundHTTPException()
 
     if (user_identification := request.client.host) is not None:
         user_obj = user_manager.get_or_create_user(user_identification)
-        short_link_clicks_manager.update_clicks_count(user_obj.id, url_mapping_obj.id)
+        short_link_clicks_manager.update_clicks_count(
+            user_obj.id, url_mapping_obj.id
+        )
 
     return RedirectResponse(url_mapping_obj.original_url)
 
@@ -79,6 +90,7 @@ def redirect(url_key: str,
 )
 def render_view(request: Request):
     project_dir = os.path.dirname(__file__)
-    templates = Jinja2Templates(directory=os.path.join(project_dir, "../static/"))
+    templates = Jinja2Templates(directory=os.path.join(project_dir,
+                                                       "../static/"))
 
     return templates.TemplateResponse("main.html", {"request": request})

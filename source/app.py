@@ -34,6 +34,8 @@ def create_app(config: 'Settings' = settings) -> FastAPI:
     include_routers(app)
 
     project_dir = os.path.dirname(__file__)
-    app.mount("/static", StaticFiles(directory=os.path.join(project_dir, "static/")), name="static")
+    app.mount("/static",
+              StaticFiles(directory=os.path.join(project_dir, "static/")),
+              name="static")
 
     return app

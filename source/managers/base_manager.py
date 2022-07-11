@@ -14,4 +14,5 @@ class BaseManager:
         raise NotImplementedError
 
     def get_model_object(self, filters, method: str = 'first'):  # No types
-        return getattr(self.session.query(self.model).filter_by(**filters), method)()
+        query = self.session.query(self.model).filter_by(**filters)
+        return getattr(query, method)()

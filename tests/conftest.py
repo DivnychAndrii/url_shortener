@@ -7,7 +7,12 @@ from fastapi.testclient import TestClient
 
 from source.database import get_db
 from main import app
-from source.models import Base, UserModel, UrlMappingsModel, ShortLinkClicksModel
+from source.models import (
+    Base,
+    UserModel,
+    UrlMappingsModel,
+    ShortLinkClicksModel,
+)
 
 from .test_db import engine, get_test_db
 
@@ -51,7 +56,9 @@ def generate_users(db: 'TestingSessionLocal') -> List[UserModel]:
 
 
 @pytest.fixture
-def generate_url_mapping_objects(db: 'TestingSessionLocal') -> List[UrlMappingsModel]:
+def generate_url_mapping_objects(
+        db: 'TestingSessionLocal'
+) -> List[UrlMappingsModel]:
     model_objects = []
     for _ in range(3):
         random_uuid = str(uuid4())
@@ -68,12 +75,13 @@ def generate_url_mapping_objects(db: 'TestingSessionLocal') -> List[UrlMappingsM
 
 
 @pytest.fixture
-def generate_short_link_clicks_objects(generate_users,
-                                       generate_url_mapping_objects,
-                                       db: 'TestingSessionLocal') -> List[ShortLinkClicksModel]:
+def generate_short_link_clicks_objects(
+        generate_users,
+        generate_url_mapping_objects,
+        db: 'TestingSessionLocal'
+) -> List[ShortLinkClicksModel]:
     model_objects = []
     for user, url in zip(generate_users, generate_url_mapping_objects):
-
         new_object = ShortLinkClicksModel(
             user_id=user.id,
             url_mapping_id=url.id,

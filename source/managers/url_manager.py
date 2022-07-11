@@ -13,7 +13,9 @@ class URLManager(BaseManager):
     def model(self) -> Type[UrlMappingsModel]:
         return UrlMappingsModel
 
-    def get_or_create_short_url_hash(self, url: Union[AnyUrl, str]) -> UrlMappingsModel:
+    def get_or_create_short_url_hash(
+            self, url: Union[AnyUrl, str]
+    ) -> UrlMappingsModel:
         db_object = self.get_model_object({'original_url': url})
 
         if not db_object:
@@ -26,4 +28,3 @@ class URLManager(BaseManager):
             self.session.commit()
 
         return db_object
-

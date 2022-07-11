@@ -17,7 +17,9 @@ class TestUserManager:
     def test_manager(self, db: 'TestingSessionLocal') -> UserManager:
         yield UserManager(db)
 
-    @pytest.mark.parametrize('key', [column.key for column in UserModel.__table__.columns])
+    @pytest.mark.parametrize('key', [
+        column.key for column in UserModel.__table__.columns
+    ])
     def test_users_by_filters(self,
                               test_manager: UserManager,
                               generate_users: List[UserModel],
@@ -37,19 +39,27 @@ class TestUserManager:
         existing_user = choice(generate_users)
         get_model_object_mock.return_value = existing_user
 
-        result = test_manager.get_or_create_user(existing_user.public_identifier)
+        result = test_manager.get_or_create_user(
+            existing_user.public_identifier
+        )
 
         assert result == existing_user
-        get_model_object_mock.assert_called_once_with({'public_identifier': existing_user.public_identifier})
+        get_model_object_mock.assert_called_once_with(
+            {'public_identifier': existing_user.public_identifier}
+        )
 
     @patch.object(UserManager, 'get_model_object', return_value=None)
-    def test_get_or_create_user_no_existing_users(self,
-                                                  get_model_object_mock: MagicMock,
-                                                  generate_users: List[UserModel],
-                                                  test_manager: UserManager) -> None:
+    def test_get_or_create_user_no_existing_users(
+            self,
+            get_model_object_mock: MagicMock,
+            generate_users: List[UserModel],
+            test_manager: UserManager
+    ) -> None:
         test_identifier = str(randint(1000, 10000))
         result = test_manager.get_or_create_user(test_identifier)
 
         assert result.public_identifier == test_identifier
         assert isinstance(result, UserModel)
-        get_model_object_mock.assert_called_once_with({'public_identifier': test_identifier})
+        get_model_object_mock.assert_called_once_with(
+            {'public_identifier': test_identifier}
+        )

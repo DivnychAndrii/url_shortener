@@ -12,10 +12,14 @@ class ShortLinkClicksModel(Base):
         UniqueConstraint('user_id', 'url_mapping_id'),
     )
 
-    user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=False, primary_key=True)
-    url_mapping_id = Column(
-        Integer, ForeignKey('url_mappings.id', ondelete="CASCADE"), nullable=False, primary_key=True
-    )
+    user_id = Column(Integer,
+                     ForeignKey('users.id', ondelete="CASCADE"),
+                     nullable=False,
+                     primary_key=True)
+    url_mapping_id = Column(Integer,
+                            ForeignKey('url_mappings.id', ondelete="CASCADE"),
+                            nullable=False,
+                            primary_key=True)
     count = Column(Integer, default=0, nullable=False)
 
     user = relationship('UserModel',

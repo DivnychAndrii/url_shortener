@@ -17,3 +17,6 @@ run-test-db: build
 
 tests: run-test-db
 	docker-compose run server python -m pytest --cov-config=.coveragerc --cov=source -v
+
+run-flake: build
+	docker-compose run server flake8 source tests
